@@ -1,0 +1,33 @@
+{
+	"id": "e109c067-f0fc-4199-853f-6c4febf54680",
+	"values": [
+		{
+			"key": "url",
+			"value": "http://localhost:3000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "post_id",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "current_likes",
+			"value": "0",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "comment_id",
+			"value": "0",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-11-30T21:11:09.810Z",
+	"_postman_exported_using": "Postman/11.21.0"
+}

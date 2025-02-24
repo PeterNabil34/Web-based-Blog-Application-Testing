@@ -1,0 +1,453 @@
+{
+	"info": {
+		"_postman_id": "2a20e724-512f-4b48-be9d-3d23eb4db273",
+		"name": "Blog API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6211619"
+	},
+	"item": [
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "List All Posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test to check the schema of the response body\r",
+									"pm.test(\"Schema is correct\", function () {\r",
+									"    pm.response.to.have.jsonSchema({\r",
+									"        type: \"array\",\r",
+									"        items: {\r",
+									"            type: \"object\",\r",
+									"            properties: {\r",
+									"                id: { type: \"number\" },\r",
+									"                title: { type: \"string\" },\r",
+									"                content: { type: \"string\" },\r",
+									"                author: { type: \"string\" },\r",
+									"                likes: { type: \"number\" }\r",
+									"            },\r",
+									"            required: [\"id\", \"title\", \"content\", \"author\", \"likes\"]\r",
+									"        }\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Test to check the status code\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": {\"type\": \"number\"},\r",
+									"        \"title\": {\"type\": \"string\"},\r",
+									"        \"content\": {\"type\": \"string\"},\r",
+									"        \"author\": {\"type\": \"string\"},\r",
+									"        \"likes\": {\"type\": \"number\"}\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"title\", \"content\", \"author\", \"likes\"]\r",
+									"};\r",
+									"\r",
+									"pm.test('Response body matches schema', function () {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a New Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has the correct schema\", function () {\r",
+									"    pm.response.to.have.jsonSchema({\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            id: { type: \"number\" },\r",
+									"            title: { type: \"string\" },\r",
+									"            content: { type: \"string\" },\r",
+									"            author: { type: \"string\" },\r",
+									"            likes: { type: \"number\" }\r",
+									"        },\r",
+									"        required: [\"id\", \"title\", \"content\", \"author\", \"likes\"]\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"let response = pm.response.json();\r",
+									"pm.globals.set(\"post_id\", response.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New Post\",\r\n    \"content\": \"This is a new blog post.\",\r\n    \"author\": \"User2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/posts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The likes incremented by 1\", () => {\r",
+									"    let likes = pm.response.json().likes;\r",
+									"    pm.expect(pm.globals.get(\"current_likes\")).to.be.equal(likes - 1);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/1/like",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1",
+								"like"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder has the **endpoints** relating to managing posts"
+		},
+		{
+			"name": "Posts Additional Test Cases",
+			"item": [
+				{
+					"name": "Get one Post (Not found)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/2101010",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"2101010"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Post (incorrect datatype))",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/hawary",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"hawary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Created Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The new Post was created successfuly\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/{{post_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"{{post_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Post (Pre-Like test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.globals.set(\"current_likes\", response.likes);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Get Post's Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/1/comments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add comment to Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let commentId = pm.response.json().id;\r",
+									"pm.globals.set(\"comment_id\", commentId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Great post!\",\r\n    \"author\": \"User3\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/posts/1/comments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments Additional Test Cases",
+			"item": [
+				{
+					"name": "check created comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check if there is a comment with specified id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var commentId = pm.globals.get(\"comment_id\");\r",
+									"    var commentExists = jsonData.some(comment => comment.id === commentId);\r",
+									"    pm.expect(commentExists).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/posts/1/comments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"posts",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
